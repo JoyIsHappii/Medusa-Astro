@@ -1,0 +1,96 @@
+---
+const currentPath = Astro.url.pathname;
+const isSlugPage = currentPath !== '/' && !currentPath.includes('/category');
+
+const links = [
+  { label: 'New Arrivals', value: 'all', hideOnSlug: true, focusDefault: true },
+  { label: 'Rings', value: 'rings', hideOnSlug: true, focusDefault: false },
+  {
+    label: 'Necklaces',
+    value: 'necklaces',
+    hideOnSlug: true,
+    focusDefault: false,
+  },
+  {
+    label: 'Bracelets',
+    value: 'bracelets',
+    hideOnSlug: true,
+    focusDefault: false,
+  },
+  {
+    label: 'Earrings',
+    value: 'earrings',
+    hideOnSlug: true,
+    focusDefault: false,
+  },
+  { label: 'Watches', value: 'watches', hideOnSlug: true, focusDefault: false },
+];
+
+---
+
+<nav
+  class="flex flex-col justify-between items-center w-full p-4 border-b border-gray-300 sticky top-0 bg-white z-10"
+  id="navbar"
+>
+  <a href="/" class="text-gray-700 no-wrap text-4xl font-medium p-4 z-99 bg-white">MEDUSA</a>
+
+  <div class="flex flex-row justify-between items-center w-full max-w-4xl" id="filter-bar">
+    <ul class="flex items-center justify-center space-x-4 flex-1 mx-8 gap-8">
+      {
+        links
+          .filter((link) => !link.hideOnSlug || !isSlugPage)
+          .map((link) => (
+            <li>
+              <button
+                id="filter-btn"
+                class=" text-gray-500 px-0 py-2 border-b-4 border-transparent 
+            hover:text-gray-500 hover:border-b-4 hover:border-gray-500 transition-colors
+            focus:text-gray-700 focus:border-b-4 focus:border-gray-700
+            cursor-pointer"
+                data-category={link.value}
+                data-focus-default={link.focusDefault}
+              >
+                {link.label}
+              </button>
+            </li>
+          ))
+      }
+    </ul>
+  </div>
+</nav>
+<script is:inline>
+  const navbar = document.getElementById('navbar');
+  const filterBar = document.getElementById('filter-bar');
+
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener('scroll', () => {
+    if (!navbar || !filterBar) return;
+
+    const currentScrollY = window.scrollY;
+
+    if (Math.abs(currentScrollY - lastScrollY) < 5) return;
+
+    const scrollingDown = currentScrollY > lastScrollY;
+
+    if (currentScrollY < 50) {
+      navbar.classList.remove('p-2');
+      navbar.classList.add('p-4');
+
+      filterBar.classList.remove('-translate-y-full', 'pointer-events-none', 'hidden', 'opacity-0');
+    }
+    else if (scrollingDown) {
+      navbar.classList.remove('p-4');
+      navbar.classList.add('p-2');
+
+      filterBar.classList.add('-translate-y-full', 'pointer-events-none', 'hidden', 'opacity-0');
+    } else {
+      navbar.classList.remove('p-2');
+      navbar.classList.add('p-4');
+
+      filterBar.classList.remove('-translate-y-full', 'pointer-events-none', 'hidden', 'opacity-0');
+    }
+
+    lastScrollY = currentScrollY;
+  });
+</script>

@@ -1,0 +1,64 @@
+---
+import '../../src/styles/global.css';
+import Card from '../../src/components/Card.astro';
+import Layout from '../../src/layouts/layout.astro';
+import products from '../../src/data/products.json';
+import Toggle from '../components/Toggle.astro';
+// import SortBy from '../components/SortBy.astro';
+---
+
+<Layout>
+  <div class="flex items-center justify-end gap-4 mb-4">
+
+    <!-- <SortBy /> -->
+    <Toggle />
+  </div>
+
+  <div class="grid grid-cols-4 gap-0">
+    {products.map((item) => <Card item={item} />)}
+  </div>
+</Layout>
+
+<script is:inline>
+  //Navigation
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('#filter-btn');
+    const cards = document.querySelectorAll('#card');
+    const toggle = document.getElementById('inStock-toggle');
+    
+
+    // Category filtering
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category');
+
+        cards.forEach((card) => {
+          if (
+            category === 'all' ||
+            card.getAttribute('data-filter') === category
+          ) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Toggle for in-stock items
+    toggle.addEventListener('change', () => {
+      cards.forEach((card) => {
+        const inStock = card.getAttribute('data-inStock');
+        const isChecked = toggle.checked;
+
+        if (inStock === 'true' || !isChecked) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+
+</script>

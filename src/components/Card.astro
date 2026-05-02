@@ -1,0 +1,42 @@
+---
+const { item } = Astro.props;
+---
+
+<div
+id="card"
+  class=" inline-block p-2.5 border border-transparent hover:border-gray-300 transition-colors"
+  data-filter={item.category ? item.category.toLowerCase() : 'unknown'}
+  data-inStock={item.inStock ? 'true' : 'false'}
+
+>
+  <a href={`/items/${item.slug}`} class="flex justify-between flex-col gap-1.5">
+    <div class="w-full h-84 bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-400">{item.image}</div>
+
+    <small class="text-gray-500 hidden">#{item.category}</small>
+
+    <div class="mb-2">
+      <h2 class="text-lg font-medium text-gray-700">{item.title}</h2>
+      <p class="text-gray-500 mb-4 font-light">{item.description}</p>
+    </div>
+    <small class="text-gray-500">
+      {item.inStock ? 'In Stock' : 'Out of Stock'}
+    </small>
+
+    <div class="flex items-center justify-between">
+      <h2 class="text-gray-700 font-medium">
+        {
+          typeof item.price === 'number'
+            ? `$${item.price.toFixed(2)}`
+            : item.price
+        }
+      </h2>
+
+      <a
+        href={`/items/${item.slug}`} 
+        class="flex justify-center px-4 py-1 border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white transition-colors"
+      >
+        Details
+    </a>
+    </div>
+  </a>
+</div>
